@@ -1,6 +1,7 @@
 # AMQ History to CSV
 
 [![justforfunnoreally.dev badge](https://img.shields.io/badge/justforfunnoreally-dev-9ff)](https://justforfunnoreally.dev)
+
 AMQ is [Anime Music Quiz](https://animemusicquiz.com/)
 This python script is written because my friends want to get a list of songs.
 
