@@ -2,8 +2,9 @@
 
 [![justforfunnoreally.dev badge](https://img.shields.io/badge/justforfunnoreally-dev-9ff)](https://justforfunnoreally.dev)
 
-AMQ is [Anime Music Quiz](https://animemusicquiz.com/)
+AMQ is [Anime Music Quiz](https://animemusicquiz.com/).
 This python script is written because my friends want to get a list of songs.
+I'm too distracted when I prepare the data manually, so I decided to write a recursive parser instead.
 
 # Input/Output
 
