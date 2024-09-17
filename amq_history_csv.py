@@ -5,6 +5,8 @@ dir = 'Song Histories'
 out_dir = "out"
 headers = "roomName,startTime,songs,songNumber"
 separator = '|'
+list_separator = '+'
+
 
 def key_dive(obj):
     if(dict != type(obj)): return ''
@@ -24,34 +26,34 @@ def key_dive(obj):
                         longest_key_idx = i
                 keys_str += key_dive(sub_obj[longest_key_idx])
             else:
-                keys_str += '"{0}"{1}'.format(key,separator)
+                keys_str += '"{0}"'.format(key) + separator
         elif(dict == sub_type): 
             keys_str += key_dive(sub_obj)
         else: 
-            keys_str += '"{0}"{1}'.format(key, separator)
+            keys_str += '"{0}"'.format(key) + separator
     return keys_str
 
-def value_dive(obj):
+def value_dive(obj,list_sep = '+'):
     value_str = ''
     obj_type = type(obj)
     if dict == obj_type:
         for item in obj:
             # if(item == 'songNumber'): print("Song Num:{0}".format(obj[item])) #-- for debugging list creation
-            value_str += value_dive(obj[item])
+            value_str += value_dive(obj[item], list_sep)
     elif list == obj_type:
         # print('----list merge----') #-- for debugging list creation
         for i in range(len(obj)):
             if(type(obj[i]) == dict):
-                value_str += value_dive(obj[i])
+                value_str += value_dive(obj[i], list_sep)
             else:
-                value_str += '"{0}"+'.format(obj[i])
-        value_str = '{0}'.format(value_str[:-1])+ separator
+                value_str += '"{0}"'.format(obj[i]) + list_sep
+        value_str = '{0}'.format(value_str[:-1]) + separator
         # print(value_str) #-- for debugging list creation
         # print("----list merge end----") #-- for debugging list creation
     elif str == obj_type:
-        value_str += '"{0}"{1}'.format(obj,separator)
+        value_str += '"{0}"'.format(obj) + separator
     else:
-        value_str += '{0}{1}'.format(obj,separator)
+        value_str += '{0}'.format(obj) + separator
     return value_str
 
 if(os.lstat(out_dir) is None):
@@ -69,12 +71,12 @@ for dir_idx in range(len(dir_list)):
     header = key_dive(history)
     header = header[:-1]
     if(len(header_text) == 0):
-        header_text = "round"+separator+header
+        header_text = "round" + separator + header
 
     values = ''
     for song in history['songs']:
         values += '{3}{2}"{0}"{2}"{1}"'.format(history['roomName'],history['startTime'],separator,dir_idx+1)+separator
-        values += value_dive(song)[:-1]
+        values += value_dive(song, list_separator)[:-1]
         values += '\n'
     # print(values)
     values_text += values
