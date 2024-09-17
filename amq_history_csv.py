@@ -7,6 +7,8 @@ headers = "roomName,startTime,songs,songNumber"
 separator = '|'
 list_separator = '+'
 
+debug_list = False
+
 def csv_format(data,type = None, fm_separator = ','):
     if(type == str):
         return '"{0}"'.format(data) + fm_separator
@@ -43,18 +45,21 @@ def value_dive(obj,list_sep = '+'):
     obj_type = type(obj)
     if dict == obj_type:
         for item in obj:
-            # if(item == 'songNumber'): print("Song Num:{0}".format(obj[item])) #-- for debugging list creation
+            if debug_list: #-- for debugging list creation
+                if(item == 'songNumber'): print("Song Num:{0}".format(obj[item]))
             value_str += value_dive(obj[item], list_sep)
     elif list == obj_type:
-        # print('----list merge----') #-- for debugging list creation
+        if debug_list: #-- for debugging list creation
+            print('----list merge----') 
         for i in range(len(obj)):
             if(type(obj[i]) == dict):
                 value_str += value_dive(obj[i], list_sep)
             else:
                 value_str += csv_format(obj[i],str, list_sep) 
         value_str = csv_format(value_str[:-1], fm_separator = separator) 
-        # print(value_str) #-- for debugging list creation
-        # print("----list merge end----") #-- for debugging list creation
+        if debug_list: #-- for debugging list creation
+            print(value_str)
+            print("----list merge end----")
     elif str == obj_type:
         value_str += csv_format(obj,str,separator)
     else:
