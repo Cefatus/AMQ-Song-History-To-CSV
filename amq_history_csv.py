@@ -7,6 +7,11 @@ headers = "roomName,startTime,songs,songNumber"
 separator = '|'
 list_separator = '+'
 
+def csv_format(data,type = None, fm_separator = ','):
+    if(type == str):
+        return '"{0}"'.format(data) + fm_separator
+    else:
+        return '{0}'.format(data) + fm_separator
 
 def key_dive(obj):
     if(dict != type(obj)): return ''
@@ -26,11 +31,11 @@ def key_dive(obj):
                         longest_key_idx = i
                 keys_str += key_dive(sub_obj[longest_key_idx])
             else:
-                keys_str += '"{0}"'.format(key) + separator
+                keys_str += csv_format(key,str,separator)
         elif(dict == sub_type): 
             keys_str += key_dive(sub_obj)
         else: 
-            keys_str += '"{0}"'.format(key) + separator
+            keys_str += csv_format(key,str,separator)
     return keys_str
 
 def value_dive(obj,list_sep = '+'):
@@ -46,14 +51,14 @@ def value_dive(obj,list_sep = '+'):
             if(type(obj[i]) == dict):
                 value_str += value_dive(obj[i], list_sep)
             else:
-                value_str += '"{0}"'.format(obj[i]) + list_sep
-        value_str = '{0}'.format(value_str[:-1]) + separator
+                value_str += csv_format(obj[i],str, list_sep) 
+        value_str = csv_format(value_str[:-1], fm_separator = separator) 
         # print(value_str) #-- for debugging list creation
         # print("----list merge end----") #-- for debugging list creation
     elif str == obj_type:
-        value_str += '"{0}"'.format(obj) + separator
+        value_str += csv_format(obj,str,separator)
     else:
-        value_str += '{0}'.format(obj) + separator
+        value_str += csv_format(obj,int,separator)
     return value_str
 
 if(os.lstat(out_dir) is None):
@@ -71,11 +76,11 @@ for dir_idx in range(len(dir_list)):
     header = key_dive(history)
     header = header[:-1]
     if(len(header_text) == 0):
-        header_text = "round" + separator + header
+        header_text = csv_format("round",str,separator) + header
 
     values = ''
     for song in history['songs']:
-        values += '{3}{2}"{0}"{2}"{1}"'.format(history['roomName'],history['startTime'],separator,dir_idx+1)+separator
+        values += separator.join([str(dir_idx+1), history['roomName'], history['startTime']]) + separator
         values += value_dive(song, list_separator)[:-1]
         values += '\n'
     # print(values)
