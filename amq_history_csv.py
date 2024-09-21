@@ -66,7 +66,9 @@ def value_dive(obj,list_sep = '+'):
         value_str += csv_format(obj,int,separator)
     return value_str
 
-if(os.lstat(out_dir) is None):
+try:
+    os.lstat(out_dir)
+except FileNotFoundError:
     os.mkdir(out_dir)
 
 header_text = ''
